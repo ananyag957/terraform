@@ -1,0 +1,55 @@
+# Define input variables
+variable "instance_name" {
+  type        = string
+  description = "Name of the instance"
+}
+
+variable "machine_type" {
+  type        = string
+  default     = "n1-standard-1"
+  description = "Machine type for the instance"
+}
+
+variable "zone" {
+  type        = string
+  default     = "us-central1-a"
+  description = "Zone where the instance will be deployed"
+}
+
+# Configure the Google Cloud provider
+provider "google" {
+  credentials = file("/path/to/your/service-account-key.json")
+  project     = "your-gcp-project-id"
+  region      = "us-central1"  # Adjust as per your preferred region
+}
+
+# Define resources
+resource "google_compute_instance" "example_instance" {
+  name         = var.instance_name
+  machine_type = var.machine_type
+  zone         = var.zone
+
+  boot_disk {
+    initialize_params {
+      image = "ubuntu-os-cloud/ubuntu-2004-lts"
+    }
+  }
+
+  network_interface {
+    network = "default"
+    access_config {}
+  }
+}
+
+# Define outputs
+output "instance_name" {
+  value = var.instance_name
+}
+
+output "machine_type" {
+  value = var.machine_type
+}
+
+output "zone" {
+  value = var.zone
+}
